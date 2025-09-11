@@ -1,0 +1,34 @@
+﻿@model IEnumerable<CRUDTALLER.Models.Pelicula>
+
+@{
+    ViewData["Title"] = "Cartelera";
+}
+
+<h2 class="mb-4">🎬 Cartelera de Películas</h2>
+
+<div class="row">
+    @foreach (var pelicula in Model)
+    {
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm">
+                <!-- Imagen -->
+                <img src="@pelicula.ImagenUrl"
+                     alt="@pelicula.Titulo"
+                     class="card-img-top"
+                     style="height: 250px; width: 100%; object-fit: cover; object-position: center;"   />
+
+                <!-- Cuerpo -->
+                <div class="card-body">
+                    <h5 class="card-title">@pelicula.Titulo</h5>
+                    <p class="card-text">@pelicula.Descripcion</p>
+                    <p><strong>Categoría:</strong> @pelicula.Categoria</p>
+                    <p><strong>Vistas:</strong> @pelicula.Vistas</p>
+
+                    <a asp-action="Details" asp-route-id="@pelicula.Id" class="btn btn-primary">
+                        Ver detalles
+                    </a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

@@ -1,0 +1,51 @@
+﻿@model IEnumerable<CRUDTALLER.Models.Pelicula>
+
+@{
+    ViewData["Title"] = "Ranking de Películas";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>🎬 Ranking de Películas Más Vistas / Mejor Calificadas</h1>
+
+<canvas id="rankingChart" width="400" height="200"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    var ctx = document.getElementById('rankingChart').getContext('2d');
+
+    var chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
+                                                Model.Select(p => p.Titulo))),
+            datasets: [{
+                label: '⭐ Promedio de Calificaciones',
+                data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
+                                                Model.Select(p => p.Calificaciones != null && p.Calificaciones.Any()
+                                                        ? p.Calificaciones.Average(c => c.Puntuacion)
+                                                        : 0))),
+                backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            },
+            {
+                label: '👁️ Vistas',
+                data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
+                                                Model.Select(p => p.Vistas))),
+                backgroundColor: 'rgba(255, 206, 86, 0.6)',
+                borderColor: 'rgba(255, 206, 86, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: 'top' },
+                title: {
+                    display: true,
+                    text: 'Ranking de Películas'
+                }
+            }
+        }
+    });
+</script>
