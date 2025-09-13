@@ -3,17 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CRUDTALLER.Models;
 using SalesManagementApp.Data;
-using Microsoft.AspNetCore.Authorization;
 
 namespace CRUDTALLER.Controllers
 {
-
-
-
     public class PeliculasController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -26,7 +21,7 @@ namespace CRUDTALLER.Controllers
         // GET: Peliculas
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Pelicula.ToListAsync());
+            return View(await _context.Peliculas.ToListAsync());
         }
 
         // GET: Peliculas/Cartelera
@@ -39,6 +34,7 @@ namespace CRUDTALLER.Controllers
             return View(peliculas);
         }
 
+        // GET: Peliculas/Ranking
         public async Task<IActionResult> Ranking()
         {
             var peliculas = await _context.Peliculas
@@ -48,24 +44,18 @@ namespace CRUDTALLER.Controllers
             return View(peliculas);
         }
 
-
-
-
-
         // GET: Peliculas/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
-            var pelicula = await _context.Pelicula
+            var pelicula = await _context.Peliculas
+                .Include(p => p.Calificaciones) // opcional si quieres mostrar ratings en detalles
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (pelicula == null)
-            {
                 return NotFound();
-            }
 
             return View(pelicula);
         }
@@ -77,8 +67,6 @@ namespace CRUDTALLER.Controllers
         }
 
         // POST: Peliculas/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Titulo,Descripcion,ImagenUrl,Categoria,Vistas")] Pelicula pelicula)
@@ -96,29 +84,22 @@ namespace CRUDTALLER.Controllers
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
-            var pelicula = await _context.Pelicula.FindAsync(id);
+            var pelicula = await _context.Peliculas.FindAsync(id);
             if (pelicula == null)
-            {
                 return NotFound();
-            }
+
             return View(pelicula);
         }
 
         // POST: Peliculas/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Titulo,Descripcion,ImagenUrl,Categoria,Vistas")] Pelicula pelicula)
         {
             if (id != pelicula.Id)
-            {
                 return NotFound();
-            }
 
             if (ModelState.IsValid)
             {
@@ -130,13 +111,9 @@ namespace CRUDTALLER.Controllers
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!PeliculaExists(pelicula.Id))
-                    {
                         return NotFound();
-                    }
                     else
-                    {
                         throw;
-                    }
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -147,16 +124,13 @@ namespace CRUDTALLER.Controllers
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
-            var pelicula = await _context.Pelicula
+            var pelicula = await _context.Peliculas
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (pelicula == null)
-            {
                 return NotFound();
-            }
 
             return View(pelicula);
         }
@@ -166,11 +140,9 @@ namespace CRUDTALLER.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var pelicula = await _context.Pelicula.FindAsync(id);
+            var pelicula = await _context.Peliculas.FindAsync(id);
             if (pelicula != null)
-            {
-                _context.Pelicula.Remove(pelicula);
-            }
+                _context.Peliculas.Remove(pelicula);
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
@@ -178,7 +150,7 @@ namespace CRUDTALLER.Controllers
 
         private bool PeliculaExists(int id)
         {
-            return _context.Pelicula.Any(e => e.Id == id);
+            return _context.Peliculas.Any(e => e.Id == id);
         }
     }
 }

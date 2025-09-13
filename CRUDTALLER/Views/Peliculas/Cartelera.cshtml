@@ -15,21 +15,48 @@
                 <img src="@Url.Content(item.ImagenUrl)"
                      alt="@item.Titulo"
                      class="card-img-top"
-                     style="height:250px; object-fit:cover;"   />
+                     style="height:250px; object-fit:cover;" />
                 <div class="card-body">
                     <h5 class="card-title">@item.Titulo</h5>
                     <p class="card-text">@item.Descripcion</p>
                     <p><strong>Categoría:</strong> @item.Categoria</p>
                     <p><strong>Vistas:</strong> @item.Vistas</p>
+
                     <p>
                         ⭐ Promedio:
                         @(item.Calificaciones != null && item.Calificaciones.Any()
-                                            ? item.Calificaciones.Average(c => c.Puntuacion).ToString("0.0")
+                                            ? item.Calificaciones.Average(c => c.Score).ToString("0.0")
                                             : "N/A")
                 </p>
-                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary btn-sm">Ver detalles</a>
+
+                    <!-- Formulario para puntuar -->
+                    <form asp-controller="Calificaciones" asp-action="Puntuar" method="post">
+                        <input type="hidden" name="peliculaId" value="@item.Id" />
+                        <div class="star-rating">
+                        @for (int i = 1; i <= 5; i++)
+                            {
+                                <button type="submit" name="score" value="@i" class="btn btn-link p-0" style="text-decoration:none; font-size:18px;">
+                                    ⭐
+                                </button>
+                            }
+                        </div>
+                    </form>
+
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary btn-sm mt-2">Ver detalles</a>
+                </div>
             </div>
         </div>
-    </div>
-        }
+    }
 </div>
+
+<style>
+    .star-rating button {
+        background: none;
+        border: none;
+        cursor: pointer;
+    }
+
+        .star-rating button:hover {
+            transform: scale(1.2);
+        }
+</style>

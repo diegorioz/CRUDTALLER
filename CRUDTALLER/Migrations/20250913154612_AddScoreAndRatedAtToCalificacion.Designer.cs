@@ -12,8 +12,8 @@ using SalesManagementApp.Data;
 namespace CRUDTALLER.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250905210326_migracionidentidad")]
-    partial class migracionidentidad
+    [Migration("20250913154612_AddScoreAndRatedAtToCalificacion")]
+    partial class AddScoreAndRatedAtToCalificacion
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,62 @@ namespace CRUDTALLER.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("CRUDTALLER.Models.Calificacion", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("PeliculaId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("RatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Score")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PeliculaId");
+
+                    b.ToTable("Calificaciones");
+                });
+
+            modelBuilder.Entity("CRUDTALLER.Models.Pelicula", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Categoria")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Descripcion")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImagenUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Titulo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Vistas")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Pelicula");
+                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -227,105 +283,15 @@ namespace CRUDTALLER.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("SalesManagementApp.Models.Cliente", b =>
+            modelBuilder.Entity("CRUDTALLER.Models.Calificacion", b =>
                 {
-                    b.Property<int>("ClienteId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.HasOne("CRUDTALLER.Models.Pelicula", "Pelicula")
+                        .WithMany("Calificaciones")
+                        .HasForeignKey("PeliculaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ClienteId"));
-
-                    b.Property<string>("Direccion")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Nombre")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Telefono")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ClienteId");
-
-                    b.ToTable("Cliente");
-                });
-
-            modelBuilder.Entity("SalesManagementApp.Models.DetalleVenta", b =>
-                {
-                    b.Property<int>("DetalleVentaId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DetalleVentaId"));
-
-                    b.Property<int>("Cantidad")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductoId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Subtotal")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("VentaId")
-                        .HasColumnType("int");
-
-                    b.HasKey("DetalleVentaId");
-
-                    b.HasIndex("ProductoId");
-
-                    b.HasIndex("VentaId");
-
-                    b.ToTable("Detalle");
-                });
-
-            modelBuilder.Entity("SalesManagementApp.Models.Producto", b =>
-                {
-                    b.Property<int>("ProductoId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProductoId"));
-
-                    b.Property<string>("Nombre")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Precio")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("Stock")
-                        .HasColumnType("int");
-
-                    b.HasKey("ProductoId");
-
-                    b.ToTable("Producto");
-                });
-
-            modelBuilder.Entity("SalesManagementApp.Models.Venta", b =>
-                {
-                    b.Property<int>("VentaId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("VentaId"));
-
-                    b.Property<int>("ClienteId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("Fecha")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal>("Total")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("VentaId");
-
-                    b.HasIndex("ClienteId");
-
-                    b.ToTable("Venta");
+                    b.Navigation("Pelicula");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -379,39 +345,9 @@ namespace CRUDTALLER.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("SalesManagementApp.Models.DetalleVenta", b =>
+            modelBuilder.Entity("CRUDTALLER.Models.Pelicula", b =>
                 {
-                    b.HasOne("SalesManagementApp.Models.Producto", "Producto")
-                        .WithMany()
-                        .HasForeignKey("ProductoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SalesManagementApp.Models.Venta", "Venta")
-                        .WithMany("DetalleVentas")
-                        .HasForeignKey("VentaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Producto");
-
-                    b.Navigation("Venta");
-                });
-
-            modelBuilder.Entity("SalesManagementApp.Models.Venta", b =>
-                {
-                    b.HasOne("SalesManagementApp.Models.Cliente", "Cliente")
-                        .WithMany()
-                        .HasForeignKey("ClienteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Cliente");
-                });
-
-            modelBuilder.Entity("SalesManagementApp.Models.Venta", b =>
-                {
-                    b.Navigation("DetalleVentas");
+                    b.Navigation("Calificaciones");
                 });
 #pragma warning restore 612, 618
         }

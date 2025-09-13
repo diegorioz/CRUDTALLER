@@ -61,34 +61,34 @@ using (var scope = app.Services.CreateScope())
     {
         return;
     }
-    context.Peliculas.AddRange(
-        new Pelicula
-        {
-            Titulo = "El conjuro",
-            Descripcion = "Película de terror",
-            Categoria = "Terror",
-            ImagenUrl = "/images/elconjuro.jpg",
-            Vistas = 214
-        },
-        new Pelicula
-        {
-            Titulo = "lala land",
-            Descripcion = "Romance y drama",
-            Categoria = "Drama",
-            ImagenUrl = "/images/lalaland.jpeg",
-            Vistas = 160
-        },
-        new Pelicula
-        {
-            Titulo = "Los increíbles",
-            Descripcion = "Superhéroes ",
-            Categoria = "Acción, Animación",
-            ImagenUrl = "/images/losincreibles.jpeg",
-            Vistas = 115
-        }
-    );
+//    context.Peliculas.AddRange(
+//        new Pelicula
+//        {
+//            Titulo = "El conjuro",
+//            Descripcion = "Película de terror",
+//            Categoria = "Terror",
+//            ImagenUrl = "/images/elconjuro.jpg",
+//            Vistas = 214
+//        },
+//        new Pelicula
+//        {
+//            Titulo = "lala land",
+//            Descripcion = "Romance y drama",
+//            Categoria = "Drama",
+//            ImagenUrl = "/images/lalaland.jpeg",
+//            Vistas = 160
+//        },
+//        new Pelicula
+//        {
+//            Titulo = "Los increíbles",
+//            Descripcion = "Superhéroes ",
+//            Categoria = "Acción, Animación",
+//            ImagenUrl = "/images/losincreibles.jpeg",
+//            Vistas = 115
+//        }
+//    );
 
-    context.SaveChanges();
+//    context.SaveChanges();
 }
 
 app.MapGet("/__check-image", (IWebHostEnvironment env) =>

@@ -22,7 +22,7 @@
                 label: '⭐ Promedio de Calificaciones',
                 data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
                                                 Model.Select(p => p.Calificaciones != null && p.Calificaciones.Any()
-                                                        ? p.Calificaciones.Average(c => c.Puntuacion)
+                                                        ? p.Calificaciones.Average(c => c.Score)
                                                         : 0))),
                 backgroundColor: 'rgba(54, 162, 235, 0.6)',
                 borderColor: 'rgba(54, 162, 235, 1)',

@@ -1,11 +1,19 @@
-﻿namespace CRUDTALLER.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace CRUDTALLER.Models
 {
     public class Calificacion
     {
         public int Id { get; set; }
-        public int PeliculaId { get; set; }
-        public Pelicula Pelicula { get; set; }
-        public int Puntuacion { get; set; } // 1 a 5 estrellas
-        public DateTime Fecha { get; set; }
+
+        [Required]
+        public int PeliculaId { get; set; }   // FK a película
+        public Pelicula Pelicula { get; set; }  // Relación con Pelicula
+
+        [Range(1, 5)]
+        public int Score { get; set; }  // Puntuación de 1 a 5 estrellas
+
+        public DateTime RatedAt { get; set; } = DateTime.Now;
     }
+
 }
