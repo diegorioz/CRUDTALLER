@@ -19,19 +19,34 @@ namespace CRUDTALLER.Controllers
         }
 
         // GET: Peliculas
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString)
         {
-            return View(await _context.Peliculas.ToListAsync());
+            var peliculas = from p in _context.Peliculas
+                            select p;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                peliculas = peliculas.Where(s => s.Titulo.Contains(searchString)
+                                              || s.Categoria.Contains(searchString));
+            }
+
+            return View(await peliculas.ToListAsync());
         }
 
         // GET: Peliculas/Cartelera
-        public async Task<IActionResult> Cartelera()
+        public async Task<IActionResult> Cartelera(string searchString)
         {
-            var peliculas = await _context.Peliculas
+            var peliculas = _context.Peliculas
                 .Include(p => p.Calificaciones)
-                .ToListAsync();
+                .AsQueryable();
 
-            return View(peliculas);
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                peliculas = peliculas.Where(s => s.Titulo.Contains(searchString)
+                                              || s.Categoria.Contains(searchString));
+            }
+
+            return View(await peliculas.ToListAsync());
         }
 
         // GET: Peliculas/Ranking
@@ -51,7 +66,7 @@ namespace CRUDTALLER.Controllers
                 return NotFound();
 
             var pelicula = await _context.Peliculas
-                .Include(p => p.Calificaciones) // opcional si quieres mostrar ratings en detalles
+                .Include(p => p.Calificaciones)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (pelicula == null)

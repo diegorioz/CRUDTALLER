@@ -7,6 +7,12 @@
 
 <h1 class="mb-4">🎬 Cartelera de Películas</h1>
 
+<form asp-controller="Peliculas" asp-action="Cartelera" method="get" class="mb-4 d-flex">
+    <input type="text" name="searchString" class="form-control me-2" placeholder="Buscar película..." />
+    <button type="submit" class="btn btn-primary">Buscar</button>
+</form>
+
+
 <div class="row">
     @foreach (var item in Model)
     {
